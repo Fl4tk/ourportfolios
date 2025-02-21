@@ -1,16 +1,20 @@
 package com.ourportfolios.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ourportfolios.model.Sample;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@CrossOrigin
+@RequestMapping("/api")
 public class HelloController {
-	@GetMapping("/")
-	public Sample hello() {
-		return new Sample(1, "Tareuchi");
-	}
+
+    @GetMapping("/hello")
+    public Map<String, String> hello() {
+        Map<String, String> response = new HashMap<>();
+        response.put("news", "Hello, Spring Boot!");
+        return response;
+    }
 }
