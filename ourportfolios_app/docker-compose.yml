@@ -42,9 +42,9 @@ services:
       context: ./
       dockerfile: ./docker/solr/Dockerfile
     volumes:
-      - ./etc/solr/ourportfolios_item:/var/solr/data/ourportfolios_item/conf
-      - ./etc/solr/ourportfolios_trend:/va/ourportfolios_trend/conf
-      - ./etc/solr/ourportfolios_suggest:/va/ourportfolios_suggest/conf
+      - ./etc/ourportfolios_item:/var/solr/data/ourportfolios_item/conf
+      - ./etc/ourportfolios_trend:/var/solr/data/ourportfolios_trend/conf
+      - ./etc/ourportfolios_suggest:/var/solr/data/ourportfolios_suggest/conf
     ports:
       - "38983:8983"
     networks:
