@@ -12,9 +12,9 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
     command: >
-      bash -c "java -jar /app/application.jar"
+      bash -c "mvn clean package && java -jar /ourportfolios/target/ourportfolios-0.0.1-SNAPSHOT.jar"
     ports:
-      - "38000:8080"
+      - "38000:8000"
     volumes:
       - ../ourportfolios_app:/ourportfolios
     networks:

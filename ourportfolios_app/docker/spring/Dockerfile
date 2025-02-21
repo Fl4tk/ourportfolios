@@ -1,42 +1,39 @@
-FROM gradle:7.6.1-jdk17 AS build
-WORKDIR /home/gradle/project
+FROM ubuntu:latest
 
-COPY --chown=gradle:gradle . .
+RUN apt -y update && apt install -y \
+    wget \
+    tar \
+    ca-certificates \
+    curl \
+    git \
+    cron \
+    vim \
+    sudo \
+    jq \
+    lsof \
+    strace \
+    maven
 
-RUN chmod +x gradlew && \
-./gradlew clean build -x test --no-daemon && \
-apt-get update && \
-apt-get install -y \
-  build-essential \
-  libssl-dev \
-  libreadline-dev \
-  libgdbm-dev \
-  libbz2-dev \
-  libncurses-dev \
-  libaio-dev \
-  libxml2-dev \
-  libxslt1-dev \
-  libffi-dev \
-  wget \
-  curl \
-  lsb-release \
-  default-libmysqlclient-dev \
-  git \
-  zlib1g-dev \
-  language-pack-ja-base \
-  language-pack-ja \
-  cron \
-  vim \
-  liblzma-dev \
-  jq \
-  iputils-ping \
-  && rm -rf /var/lib/apt/lists/*
 
-FROM openjdk:17-jdk-slim
-WORKDIR /
+# Javaインストール
+RUN wget https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz && \
+    tar -xvf jdk-23_linux-aarch64_bin.tar.gz && \
+    mv /jdk-23.* /jdk-23 && \
+    mkdir -p /usr/lib/jvm/ && \
+    mv /jdk-23 /usr/lib/jvm/ && \
+    rm jdk-23_linux-aarch64_bin.tar.gz
 
-COPY --from=build /home/gradle/project/build/libs/*.jar application.jar
+ENV JAVA_HOME=/usr/lib/jvm/jdk-23
+ENV PATH=$JAVA_HOME/bin:$PATH
 
-EXPOSE 8080
+# バイナリ実行用
+RUN DEBIAN_FRONTEND=noninteractive apt install qemu-user qemu-user-static libc6-arm64-cross -y && \
+    apt-get install qemu-user-static
 
-ENTRYPOINT ["java", "-jar", "application.jar"]
+WORKDIR /ourportfolios
+
+# ポートを開放
+EXPOSE 8000
+
+ENV QEMU_LD_PREFIX=/usr/aarch64-linux-gnu/:$QEMU_LD_PREFIX
+ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
