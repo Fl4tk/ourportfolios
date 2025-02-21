@@ -42,3 +42,6 @@ target/
 .vscode/
 
 .DS_Store
+/.metadata/
+
+/Servers
